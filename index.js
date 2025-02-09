@@ -14,7 +14,7 @@ const socketIO = require('socket.io')(http, {
 });
 
 // app.use(cors());
-
+let interval = null;
 socketIO.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
@@ -27,7 +27,10 @@ socketIO.on('connection', (socket) => {
   socket.on('livelogs', () => {
     console.log(`⚡:  user needs live logs=>`);
 
-    setInterval(() => {
+    if (interval) {
+      clearInterval(interval);
+    }
+    interval = setInterval(() => {
       socket.emit('updatelogs', { data: 'received', id: new Date() });
     }, 5000);
     socket.emit('updatelogs', { data: 'received', id: new Date() });
